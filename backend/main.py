@@ -73,4 +73,5 @@ if __name__ == "__main__":
     # 或者在終端機中，進入 backend 資料夾，運行以下命令：
     # uvicorn main:app --reload --host 0.0.0.0 --port 8000
     print("FastAPI 服務已啟動，請訪問 http://127.0.0.1:8000/docs 查看 API 文件。")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8080)
+    # uvicorn.run("main:app", host="0.0.0.0", port=8080)

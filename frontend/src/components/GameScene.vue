@@ -52,8 +52,8 @@ import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
 // 定義後端 API 的基礎 URL
-//const API_BASE_URL = 'http://localhost:8000/api'; // 請確保與 FastAPI 運行的地址和端口一致
-const API_BASE_URL = 'https://aphasiaprojectapi.zeabur.app';
+// 修正：將 /api 加入到基礎 URL 中，以匹配 FastAPI 的路由前綴
+const API_BASE_URL = 'https://aphasiaprojectapi.zeabur.app/api';
 
 
 const currentScene = ref(null);
@@ -64,14 +64,13 @@ const errorMessage = ref(null); // 錯誤訊息
 
 // 載入場景數據
 const loadScene = async (id) => {
-  console.log(`loadScene 函數被呼叫，嘗試載入 ID: ${id}`); // 確認這個訊息是否出現
+  console.log(`loadScene 函數被呼叫，嘗試載入 ID: ${id}`);
   isLoading.value = true;
   errorMessage.value = null; // 清除之前的錯誤訊息
   try {
-    //const response = await axios.get(`<span class="math-inline">\{API\_BASE\_URL\}/scene/</span>{id}`);
-    // 確保是這樣寫，沒有任何額外的標籤或字符
+    // 現在 API_BASE_URL 已經包含 /api，所以這裡直接拼接場景 ID 即可
     const response = await axios.get(`${API_BASE_URL}/scene/${id}`);
-    console.log("成功從 API 獲取場景數據:", response.data); // 確認這個訊息是否出現
+    console.log("成功從 API 獲取場景數據:", response.data);
     currentScene.value = response.data;
     console.log("載入的場景數據:", response.data);
     console.log("對話數據:", response.data.dialogue);
@@ -109,7 +108,7 @@ const loadScene = async (id) => {
 const handleChoice = async (nextId, responseText, fxSound, fxImage) => {
     // 先播放點擊音效 (如果有的話)
     if (fxAudio.value && fxSound) {
-        fxAudio.value.src = `/assets/sounds/${fxSound}`;
+        fxAudio.value.src = `/assets/sounds/${fxSound}`; // 假設音效路徑相對於前端根目錄
         try {
             await fxAudio.value.play();
         } catch (e) {
@@ -135,6 +134,7 @@ const resetGame = async () => {
   isLoading.value = true;
   try {
     console.log("開始獲取起始ID...");
+    // 現在 API_BASE_URL 已經包含 /api，所以這裡直接拼接 start_id 即可
     const startIdResponse = await axios.get(`${API_BASE_URL}/start_id`);
     console.log("成功獲取起始ID:", startIdResponse.data.start_id);
 

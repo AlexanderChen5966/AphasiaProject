@@ -26,7 +26,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # 開發時前端 Vue 執行的網址
+    allow_origins=[
+        "http://localhost:5173",
+        "https://alexanderchen5966.github.io",
+                   ],  # 開發時前端 Vue 執行的網址
     # allow_origins=["*"],  # ⚠️ 僅限開發階段使用，生產環境建議寫明確網址
     allow_credentials=True,
     allow_methods=["*"],

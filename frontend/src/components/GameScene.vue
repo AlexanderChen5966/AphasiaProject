@@ -51,11 +51,9 @@
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
-// 在組件掛載時設定 axios 的基礎 URL
-onMounted(() => {
-  // 注意這裡將 /api 包含在 baseURL 中
-  // Axios 會自動處理 baseURL 和相對路徑之間的斜線
-  axios.defaults.baseURL = 'https://aphasiaprojectapi.zeabur.app/api';
+// 創建一個獨立的 Axios 實例，確保 baseURL 正確且不會被其他地方干擾
+const apiClient = axios.create({
+  baseURL: 'https://aphasiaprojectapi.zeabur.app/api', // <-- 這裡包含了 /api
 });
 
 const currentScene = ref(null);
@@ -70,8 +68,12 @@ const loadScene = async (id) => {
   isLoading.value = true;
   errorMessage.value = null; // 清除之前的錯誤訊息
   try {
-    // 現在 axios.defaults.baseURL 已經設定，這裡直接使用相對路徑即可
-    const response = await axios.get(`/scene/${id}`);
+    // 透過 apiClient 實例發送請求，只需提供相對路徑
+    const requestUrl = `/scene/${id}`;
+    // 新增日誌：記錄實際要發出的完整 URL
+    console.log(`即將請求場景數據的完整 URL: ${apiClient.defaults.baseURL}${requestUrl}`);
+
+    const response = await apiClient.get(requestUrl);
     console.log("成功從 API 獲取場景數據:", response.data);
     currentScene.value = response.data;
     console.log("載入的場景數據:", response.data);
@@ -97,7 +99,7 @@ const loadScene = async (id) => {
     console.error("載入場景錯誤:", error);
     currentScene.value = null; // 清空場景數據
     if (error.response && error.response.status === 404) {
-      errorMessage.value = `場景數據未找到 (ID: ${id})。遊戲可能已結束或數據錯誤。`;
+      errorMessage.value = `場景數據未找到 (ID: ${id})。遊戲可能已結束或數據錯誤。請檢查後端日誌。`;
     } else {
       errorMessage.value = `無法連接到遊戲伺服器或發生其他錯誤: ${error.message}。請確認後端是否運行。`;
     }
@@ -111,9 +113,6 @@ const handleChoice = async (nextId, responseText, fxSound, fxImage) => {
     // 先播放點擊音效 (如果有的話)
     if (fxAudio.value && fxSound) {
         // 假設音效路徑相對於前端根目錄
-        // 如果你的音效檔案不是直接在前端根目錄下的 /assets/sounds
-        // 而是需要通過後端提供，那麼這裡的路徑也需要調整為後端靜態檔案的路徑
-        // 例如：`${YOUR_BACKEND_STATIC_ASSETS_URL}/sounds/${fxSound}`
         fxAudio.value.src = `/assets/sounds/${fxSound}`;
         try {
             await fxAudio.value.play();
@@ -140,8 +139,12 @@ const resetGame = async () => {
   isLoading.value = true;
   try {
     console.log("開始獲取起始ID...");
-    // 現在 axios.defaults.baseURL 已經設定，這裡直接使用相對路徑即可
-    const startIdResponse = await axios.get(`/start_id`);
+    // 透過 apiClient 實例發送請求，只需提供相對路徑
+    const requestUrl = `/start_id`;
+    // 新增日誌：記錄實際要發出的完整 URL
+    console.log(`即將請求起始ID的完整 URL: ${apiClient.defaults.baseURL}${requestUrl}`);
+
+    const startIdResponse = await apiClient.get(requestUrl);
     console.log("成功獲取起始ID:", startIdResponse.data.start_id);
 
     console.log("準備載入場景數據，ID:", startIdResponse.data.start_id);

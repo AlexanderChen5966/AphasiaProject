@@ -70,9 +70,9 @@ const loadScene = async (id) => {
   errorMessage.value = null; // 清除之前的錯誤訊息
   try {
     // 透過 apiClient 實例發送請求，只需提供相對路徑
-    //const requestUrl = `/scene/${id}`;
+    const requestUrl = `/scene/${id}`;
     //const requestUrl = `/api/scene/${id}`;
-    const requestUrl = `scene/${id}`;
+    //const requestUrl = `scene/${id}`;
     // 新增日誌：記錄實際要發出的完整 URL
     console.log(`即將請求場景數據的完整 URL: ${apiClient.defaults.baseURL}${requestUrl}`);
 
@@ -143,9 +143,10 @@ const resetGame = async () => {
   try {
     console.log("開始獲取起始ID...");
     // 透過 apiClient 實例發送請求，只需提供相對路徑
-    //const requestUrl = `/start_id`;
+    const requestUrl = `/start_id`;
     //const requestUrl = `/api/start_id`;
-    const requestUrl = `start_id`;
+    //const requestUrl = `start_id`;
+
     // 新增日誌：記錄實際要發出的完整 URL
     console.log(`即將請求起始ID的完整 URL: ${apiClient.defaults.baseURL}${requestUrl}`);
 

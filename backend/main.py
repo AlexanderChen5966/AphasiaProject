@@ -57,9 +57,9 @@ async def get_scene_details(scene_id: int):
         # --- 調整媒體資源路徑為前端可用的 URL ---
         # 假設前端的靜態資源 (圖片, 音效) 最終會放在網站根目錄下的 /assets/images 和 /assets/sounds
         if scene_data.get("image"):
-            scene_data["image"] = f"public/assets/images/{scene_data['image']}"
+            scene_data["image"] = f"/assets/images/{scene_data['image']}"
         if scene_data.get("sound"):
-            scene_data["sound"] = f"public/assets/sounds/{scene_data['sound']}"
+            scene_data["sound"] = f"/assets/sounds/{scene_data['sound']}"
         # 點擊特效的音效和圖片路徑讓前端自己處理，因為它們通常是小型的、固定的資源
 
         return scene_data

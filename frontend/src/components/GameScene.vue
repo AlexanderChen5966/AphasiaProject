@@ -53,7 +53,7 @@ import axios from 'axios';
 
 // 定義後端 API 的基礎 URL
 //const API_BASE_URL = 'http://localhost:8000/api'; // 請確保與 FastAPI 運行的地址和端口一致
-const API_BASE_URL = 'https://aphasiaprojectapi.zeabur.app/';
+const API_BASE_URL = 'https://aphasiaprojectapi.zeabur.app';
 
 
 const currentScene = ref(null);

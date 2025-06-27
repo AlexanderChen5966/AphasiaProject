@@ -51,10 +51,12 @@
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
-// 定義後端 API 的基礎 URL
-// 修正：將 /api 加入到基礎 URL 中，以匹配 FastAPI 的路由前綴
-const API_BASE_URL = 'https://aphasiaprojectapi.zeabur.app/api';
-
+// 在組件掛載時設定 axios 的基礎 URL
+onMounted(() => {
+  // 注意這裡將 /api 包含在 baseURL 中
+  // Axios 會自動處理 baseURL 和相對路徑之間的斜線
+  axios.defaults.baseURL = 'https://aphasiaprojectapi.zeabur.app/api';
+});
 
 const currentScene = ref(null);
 const bgmAudio = ref(null); // 用於引用 <audio> 元素 (背景音樂)
@@ -68,8 +70,8 @@ const loadScene = async (id) => {
   isLoading.value = true;
   errorMessage.value = null; // 清除之前的錯誤訊息
   try {
-    // 現在 API_BASE_URL 已經包含 /api，所以這裡直接拼接場景 ID 即可
-    const response = await axios.get(`${API_BASE_URL}/scene/${id}`);
+    // 現在 axios.defaults.baseURL 已經設定，這裡直接使用相對路徑即可
+    const response = await axios.get(`/scene/${id}`);
     console.log("成功從 API 獲取場景數據:", response.data);
     currentScene.value = response.data;
     console.log("載入的場景數據:", response.data);
@@ -108,7 +110,11 @@ const loadScene = async (id) => {
 const handleChoice = async (nextId, responseText, fxSound, fxImage) => {
     // 先播放點擊音效 (如果有的話)
     if (fxAudio.value && fxSound) {
-        fxAudio.value.src = `/assets/sounds/${fxSound}`; // 假設音效路徑相對於前端根目錄
+        // 假設音效路徑相對於前端根目錄
+        // 如果你的音效檔案不是直接在前端根目錄下的 /assets/sounds
+        // 而是需要通過後端提供，那麼這裡的路徑也需要調整為後端靜態檔案的路徑
+        // 例如：`${YOUR_BACKEND_STATIC_ASSETS_URL}/sounds/${fxSound}`
+        fxAudio.value.src = `/assets/sounds/${fxSound}`;
         try {
             await fxAudio.value.play();
         } catch (e) {
@@ -134,8 +140,8 @@ const resetGame = async () => {
   isLoading.value = true;
   try {
     console.log("開始獲取起始ID...");
-    // 現在 API_BASE_URL 已經包含 /api，所以這裡直接拼接 start_id 即可
-    const startIdResponse = await axios.get(`${API_BASE_URL}/start_id`);
+    // 現在 axios.defaults.baseURL 已經設定，這裡直接使用相對路徑即可
+    const startIdResponse = await axios.get(`/start_id`);
     console.log("成功獲取起始ID:", startIdResponse.data.start_id);
 
     console.log("準備載入場景數據，ID:", startIdResponse.data.start_id);

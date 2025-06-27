@@ -53,8 +53,8 @@ import axios from 'axios';
 
 // 創建一個獨立的 Axios 實例，確保 baseURL 正確且不會被其他地方干擾
 const apiClient = axios.create({
-  baseURL: 'https://aphasiaprojectapi.zeabur.app/api', // <-- 這裡包含了 /api
-  //baseURL: 'https://aphasiaprojectapi.zeabur.app',
+  //baseURL: 'https://aphasiaprojectapi.zeabur.app/api', // <-- 這裡包含了 /api
+  baseURL: 'https://aphasiaprojectapi.zeabur.app',
 });
 
 const currentScene = ref(null);
@@ -70,8 +70,8 @@ const loadScene = async (id) => {
   errorMessage.value = null; // 清除之前的錯誤訊息
   try {
     // 透過 apiClient 實例發送請求，只需提供相對路徑
-    const requestUrl = `/scene/${id}`;
-    //const requestUrl = `/api/scene/${id}`;
+    //const requestUrl = `/scene/${id}`;
+    const requestUrl = `/api/scene/${id}`;
     //const requestUrl = `scene/${id}`;
     // 新增日誌：記錄實際要發出的完整 URL
     console.log(`即將請求場景數據的完整 URL: ${apiClient.defaults.baseURL}${requestUrl}`);
@@ -116,7 +116,7 @@ const handleChoice = async (nextId, responseText, fxSound, fxImage) => {
     // 先播放點擊音效 (如果有的話)
     if (fxAudio.value && fxSound) {
         // 假設音效路徑相對於前端根目錄
-        fxAudio.value.src = `/assets/sounds/${fxSound}`;
+        fxAudio.value.src = `public/assets/sounds/${fxSound}`;
         try {
             await fxAudio.value.play();
         } catch (e) {
@@ -143,10 +143,9 @@ const resetGame = async () => {
   try {
     console.log("開始獲取起始ID...");
     // 透過 apiClient 實例發送請求，只需提供相對路徑
-    const requestUrl = `/start_id`;
-    //const requestUrl = `/api/start_id`;
+    //const requestUrl = `/start_id`;
+    const requestUrl = `/api/start_id`;
     //const requestUrl = `start_id`;
-
     // 新增日誌：記錄實際要發出的完整 URL
     console.log(`即將請求起始ID的完整 URL: ${apiClient.defaults.baseURL}${requestUrl}`);
 
